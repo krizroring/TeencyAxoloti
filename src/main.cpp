@@ -62,8 +62,8 @@ char patchTable[MAX_PATCHES][MAX_PATCH_NAME_LENGTH] = {}; // Storage for the pat
 char controllerNames[MAX_CONTROLLERS][MAX_CONTROLLER_NAME_LENGTH] = {}; // Array for the controller names
 byte controllerValues[MAX_CONTROLLERS] = {}; // array for the controller value's
 
-byte controllerCount = 0;
-byte currentControllerBank = 0;
+byte controllerCount = 0; // Number of controllers
+byte currentControllerBank = 0; // Index of the current controller bank
 
 //Pointers to the action functions
 void (*endTransmission)();
