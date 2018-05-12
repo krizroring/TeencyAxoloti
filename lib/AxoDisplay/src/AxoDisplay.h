@@ -8,7 +8,6 @@
 
 #define MAX_PATCHES 48 // Max number of patches
 #define MAX_PATCH_NAME_LENGTH 14 // Max length of the patch names
-
 #define MAX_CONTROLLERS 8 // Max number of controllers
 #define MAX_CONTROLLER_NAME_LENGTH 4 // Max number of controllers
 
@@ -27,11 +26,11 @@ public:
 
     void setControllers(char (*)[MAX_CONTROLLERS][MAX_CONTROLLER_NAME_LENGTH], byte (*)[MAX_CONTROLLERS], byte);
     void displayControllerBank(byte);
-protected:
-    int hexCharToInt(byte);
+    void updateControllerValue(byte);
+private:
     void displayPatchName(byte);
-    void displayControllerName(byte, byte);
-    void displayControllerValue(byte, byte);
+    void displayControllerName(byte);
+    void displayControllerValue(byte);
 
     byte currentPatch;
     byte numPatches;
@@ -40,6 +39,7 @@ protected:
     char (*controllerNames)[MAX_CONTROLLERS][MAX_CONTROLLER_NAME_LENGTH];
     byte (*controllerValues)[MAX_CONTROLLERS];
     byte numControllers;
+    byte startIndex;
 };
 
 #endif

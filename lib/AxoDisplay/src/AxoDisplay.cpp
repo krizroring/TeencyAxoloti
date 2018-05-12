@@ -10,6 +10,8 @@
 #define DISP_SELECTED "> "
 #define DISP_NEXT     "* "
 #define DISP_NONE     "  "
+#define DISP_VALUE_CLEAR "   "
+#define DISP_CONTROLLER_WIDTH 4
 
 LiquidCrystalFast lcd(12, 11, 18, 17, 16, 15, 14);
 
@@ -77,34 +79,44 @@ void AxoDisplay::setControllers(char (*_controllerNames)[MAX_CONTROLLERS][MAX_CO
 void AxoDisplay::displayControllerBank(byte _bank) {
     lcd.clear();
 
-    _bank = _bank * 4;
+    startIndex = _bank * DISP_CONTROLLER_WIDTH;
 
-    for (byte i = 0; i< 4; i++) {
-        if(i + _bank < numControllers) {
-            displayControllerName(i + _bank, i);
-            displayControllerValue(i + _bank, i);
+    for (byte i = 0; i< DISP_CONTROLLER_WIDTH; i++) {
+        if(i + startIndex < numControllers) {
+            displayControllerName(i + startIndex);
+            displayControllerValue(i + startIndex);
         }
     }
 }
 
+// Updates the controller value
+void AxoDisplay::updateControllerValue(byte _index) {
+    if(_index >= startIndex && _index < startIndex+ DISP_CONTROLLER_WIDTH) {
+        lcd.setCursor((_index % DISP_CONTROLLER_WIDTH)  * DISP_CONTROLLER_WIDTH, 1);
+        lcd.write(DISP_VALUE_CLEAR);
+
+        displayControllerValue(_index);
+    }
+}
+
 // Displays a controller name
-void AxoDisplay::displayControllerName(byte _index, byte _pos) {
-    lcd.setCursor(_pos * 4, 0);
+void AxoDisplay::displayControllerName(byte _index) {
+    lcd.setCursor((_index % DISP_CONTROLLER_WIDTH) * DISP_CONTROLLER_WIDTH, 0);
     for(byte i = 0; i < MAX_CONTROLLER_NAME_LENGTH; i++) {
         lcd.write((*controllerNames)[_index][i]);
     }
 }
 
 // Displays a controller name
-void AxoDisplay::displayControllerValue(byte _index, byte _pos) {
+void AxoDisplay::displayControllerValue(byte _index) {
     byte value = (*controllerValues)[_index];
 
     if(value < 10) {
-        lcd.setCursor((_pos * 4) + 2, 1);
+        lcd.setCursor(((_index % DISP_CONTROLLER_WIDTH) * DISP_CONTROLLER_WIDTH) + 2, 1);
     } else if(value < 100) {
-        lcd.setCursor((_pos * 4) + 1, 1);
+        lcd.setCursor(((_index % DISP_CONTROLLER_WIDTH) * DISP_CONTROLLER_WIDTH) + 1, 1);
     } else {
-        lcd.setCursor(_pos * 4, 1);
+        lcd.setCursor((_index % DISP_CONTROLLER_WIDTH) * DISP_CONTROLLER_WIDTH, 1);
     }
 
     lcd.print(value, DEC);
